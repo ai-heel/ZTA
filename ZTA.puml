@@ -1,29 +1,32 @@
 @startuml
 left to right direction
 title "ZeroTrust architecture -draft-ver-0.1-"
+skinparam note {
+    backgroundColor #GhostWhite
+    entrySeparator #GhostWhite
+}
+
 
 class Polityki {
-  + Branżowe
-  + Organizacyjne
-  ---
-  + Postura/Kondycja
-  ---
-  # Optymalizacja
-  ---
-  + Telemetria
+    + Branżowe
+    + Organizacyjne
+    + Postura/Kondycja
+    + Cykliczne aktualizacje
+    ---
+    # Telemetria
 }
 
 class Tożsamość {
-  + Czlowiek
-  # Maszyna
+    + Czlowiek
+    # Maszyna
 }
 note left of Tożsamość
 MFA
 end note
 
 class Urządzenie {
-  + Firmowe
-  - Prywatne
++ Firmowe
+- Prywatne
 }
 note left of Urządzenie
 zgodność
@@ -31,38 +34,41 @@ urządzenia
 end note
 
 class ZeroTrustFramework {
-    --Wzbogacanie--
-    + Zgodność urządzenia
-    + MFA
-    + Ocena ryzyka
-    --ZeroTrustPolicy--
-    + Obliczanie
-    # Egzekwowanie
+--Utwardzanie--
++ Zgodność urządzenia
++ MFA
++ Lokalizacja
++ Ocena ryzyka
+--ZeroTrustPolicy--
++ Obliczanie
+# Egzekwowanie
 }
 
 class "Ocena ryzyka" {
-    + Ciagła ocena
-    + Wywiad
-    + PostMortem
-    + Automatyzacja
-    ---
-    + Telemetria
++ Ciagła ocena
++ Wywiad
++ PostMortem
++ EFM/FDS
+---
+# Telemetria
 }
 
 class Sieć {
-    + Publiczna
-    # Prywatna
++ Publiczna
+# Prywatna
 }
 note right of Sieć
 filtrowanie
 segmentacja
+szyfrowanie
 end note
 
 class Dane {
-    + Poczta
-    - Dokumenty
-    # Bazy
-    + Strony web
++ Poczta
++ Dokumenty
++ Strony web
+# Storage
+# Bazy
 }
 note top of Dane
 klasyfikacja
@@ -70,9 +76,9 @@ szyfrowanie
 end note
 
 class Aplikacje {
-    + Onprem
-    - SaaS
-    # Hybrydowe
++ Onprem
+- SaaS
+# Hybrydowe
 }
 note top of Aplikacje
 dostęp
@@ -80,10 +86,10 @@ adaptacyjny
 end note
 
 class Infrastruktura {
-    + serverless
-    - CaaS
-    # IaaS
-    # PaaS
++ serverless
+- CaaS
+# IaaS
+# PaaS
 }
 note top of Infrastruktura
 kontrola
@@ -121,5 +127,20 @@ Sieć .> Telemetria
 Telemetria .|> "Ocena ryzyka"
 Telemetria .|> Polityki
 
+skinparam legend {
+    backgroundColor #GhostWhite
+    entrySeparator #GhostWhite
+}
+
+legend bottom
+<b>1.</b> Zawsze przeprowadzaj uwierzytelnianie i autoryzację na podstawie wszystkich dostępnych punktów danych, w tym tożsamości użytkowników, 
+ich lokalizacji, kondycji urządzeń, usługi lub obciążenia, klasyfikacji danych oraz anomalii.
+
+<b>2.</b> Ogranicz dostęp użytkowników, udzielając go „dokładnie na czas” (JIT) i tylko w niezbędnym zakresie (JEA) oraz stosując zasady adaptacyjne
+oparte na ryzyku i ochronę danych, szyfrowanie (at-rest), aby lepiej zabezpieczyć dane i zadbać o wydajność.
+
+<b>3.</b> Zminimalizuj obszar zagrożenia i dostęp do segmentów. Weryfikuj kompleksowe szyfrowanie (in-transit) i korzystaj z telemetrii/observability,
+aby uzyskać wgląd w informacje, łatwiej wykrywać zagrożenia i wzmocnić mechanizmy obrony oraz je zautomatyzować.
+endlegend
 
 @enduml
