@@ -1,0 +1,125 @@
+@startuml
+left to right direction
+title "ZeroTrust architecture -draft-ver-0.1-"
+
+class Polityki {
+  + Branżowe
+  + Organizacyjne
+  ---
+  + Postura/Kondycja
+  ---
+  # Optymalizacja
+  ---
+  + Telemetria
+}
+
+class Tożsamość {
+  + Czlowiek
+  # Maszyna
+}
+note left of Tożsamość
+MFA
+end note
+
+class Urządzenie {
+  + Firmowe
+  - Prywatne
+}
+note left of Urządzenie
+zgodność
+urządzenia
+end note
+
+class ZeroTrustFramework {
+    --Wzbogacanie--
+    + Zgodność urządzenia
+    + MFA
+    + Ocena ryzyka
+    --ZeroTrustPolicy--
+    + Obliczanie
+    # Egzekwowanie
+}
+
+class "Ocena ryzyka" {
+    + Ciagła ocena
+    + Wywiad
+    + PostMortem
+    + Automatyzacja
+    ---
+    + Telemetria
+}
+
+class Sieć {
+    + Publiczna
+    # Prywatna
+}
+note right of Sieć
+filtrowanie
+segmentacja
+end note
+
+class Dane {
+    + Poczta
+    - Dokumenty
+    # Bazy
+    + Strony web
+}
+note top of Dane
+klasyfikacja
+szyfrowanie
+end note
+
+class Aplikacje {
+    + Onprem
+    - SaaS
+    # Hybrydowe
+}
+note top of Aplikacje
+dostęp
+adaptacyjny
+end note
+
+class Infrastruktura {
+    + serverless
+    - CaaS
+    # IaaS
+    # PaaS
+}
+note top of Infrastruktura
+kontrola
+runtime
+end note
+
+
+class Telemetria {
+    + Dane
+    + Aplikacje
+    + Infrastruktura
+    + Sieć
+    + Urządenie
+    ' ---
+    ' <b>SIEM</b>
+}
+
+
+Tożsamość ---|> ZeroTrustFramework
+Urządzenie ---|> ZeroTrustFramework
+"Ocena ryzyka" --|> ZeroTrustFramework
+Polityki --|> ZeroTrustFramework
+ZeroTrustFramework --|> Sieć
+ZeroTrustFramework .> Telemetria
+
+Sieć --|> Dane
+Sieć --|> Aplikacje
+Sieć --|> Infrastruktura
+
+Dane .> Telemetria
+Aplikacje .> Telemetria
+Infrastruktura .> Telemetria
+Sieć .> Telemetria
+
+Telemetria .|> "Ocena ryzyka"
+Telemetria .|> Polityki
+
+
+@enduml
